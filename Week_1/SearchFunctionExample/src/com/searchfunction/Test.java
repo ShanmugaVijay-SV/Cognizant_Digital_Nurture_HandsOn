@@ -14,18 +14,18 @@ public class Test {
 		Product BSR=Search.BS(id);
 		
 		if(BSR==null)
-			System.out.println("The item is unavailable!");
+			System.out.println("Binary Search Result : "+"The item is unavailable!");
 		
 		else
-			System.out.println(BSR.toString());
+			System.out.println("Binary Search Result : "+BSR.toString());
 		
 		Product LSR=Search.LS(id);
 
 		if(LSR==null)
-			System.out.println("The item is unavailable!");
+			System.out.println("Linear Search Result : "+"The item is unavailable!");
 		
 		else
-			System.out.println(LSR.toString());
+			System.out.println("Binary Search Result : "+LSR.toString());
 		
 	}
 
