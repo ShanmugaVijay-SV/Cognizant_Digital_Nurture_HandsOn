@@ -1,0 +1,87 @@
+
+DELIMITER //
+create procedure ProcessMonthlyInterest()
+begin 
+	declare c_balance int;
+    declare c_id int;
+    declare done boolean default false;
+
+	declare cust_cursor cursor for select customerId,balance from customers;
+    declare continue handler for not found
+    set done=true;
+	
+    open cust_cursor;
+    
+    readloop: loop
+        fetch cust_cursor into c_id,c_balance;
+        if done then 
+			leave readloop;
+        end if;
+        
+        update customers set balance = c_balance*1.01 where customerId=c_id;
+	end loop;
+    
+    close cust_cursor;
+end //
+
+DELIMITER ;
+-- Scenario 1
+
+
+
+Delimiter //
+create procedure UpdateEmployeeBonus( in percent int)
+begin
+	declare e_id int;
+    declare e_salary int;
+	declare done boolean default false;
+    
+	declare emp_cursor cursor for select EmployeeId,salary from employees;
+	declare continue handler for not found
+    set done=true;
+        
+    open emp_cursor;
+    readloop : loop
+		fetch emp_cursor into e_id,e_salary;
+        if done then
+			leave readloop;
+		end if;
+        update employees set salary=e_salary*(1+(percent/100.00)) where e_id=EmployeeID;
+	end loop;
+    close emp_cursor;
+end // 
+delimiter ;
+
+call UpdateEmployeeBonus(10);
+-- Scenario 2
+
+
+
+DELIMITER //
+CREATE PROCEDURE TransferFunds(
+    IN fromId INT,
+    IN toId INT,
+    IN amt DECIMAL(10,2)
+)
+BEGIN
+    DECLARE sourceBalance DECIMAL(10,2);
+    SELECT Balance INTO sourceBalance FROM accounts WHERE AccountID = fromId;
+
+    IF sourceBalance >= amt THEN
+        UPDATE accounts
+        SET Balance = Balance - amt
+        WHERE AccountID = fromId;
+
+        UPDATE accounts
+        SET Balance = Balance + amt
+        WHERE AccountID = toId;
+
+        SELECT 'Transfer Successful';
+    ELSE
+        SELECT 'Insufficient Balance';
+    END IF;
+END //
+DELIMITER ;
+
+call TransferFunds(102,103,1000);
+-- Scenario 3
